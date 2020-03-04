@@ -74,8 +74,9 @@ impl DataSize {
 impl Add for DataSize {
     type Output = Self;
     fn add(self, other: Self) -> Self {
-        Self {
-            num_bits: self.num_bits + other.num_bits
+        match self.num_bits.checked_add(other.num_bits) {
+            Some(new_total) => DataSize { num_bits: new_total },
+            _ => panic!("Addition results in an overflow: {} + {} bits can't fit in a u32", self.num_bits, other.num_bits)
         }
     }
 }
@@ -131,7 +132,10 @@ macro_rules! datasize {
 macro_rules! bits {
     ($num_bits:literal) => {
         DataSize::new_from_bits($num_bits as u32)
-    }
+    };
+    ($num_bits:expr) => {
+        DataSize::new_from_bits($num_bits as u32)
+    };
 }
 
 #[macro_export]
@@ -194,5 +198,11 @@ mod tests {
     fn test_addition() {
         assert_eq!(bits!(4) + bits!(4), bytes!(1));
         assert_eq!(bytes!(2) + bits!(4), bits!(20));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_addition_overflow() {
+        bits!(u32::max_value()) + bits!(1);
     }
 }
