@@ -2,7 +2,9 @@ use std::fmt::{Display, Debug, Formatter, Result};
 use std::ops::{Add, Sub};
 
 /**
- * An amount of data, modeled as a number of a bits.
+ * An amount of data, modeled as a number of a bits and readable
+ * as an amount of bits, bytes, kilobytes or megabytes.
+ *
  * Can represent a maximum of u32::max_limit() bits.
  */
 #[derive(PartialEq, PartialOrd, Debug)]
@@ -122,7 +124,10 @@ impl Display for DataSize {
 
 // Helper macros
 
-
+/**
+ * A generic macro for creating any DataSize type
+ * ex: datasize!(4 kilobytes)
+ */
 #[macro_export]
 macro_rules! datasize {
     ($num_bits:literal bits) => {
@@ -139,6 +144,10 @@ macro_rules! datasize {
     };
 }
 
+/**
+ * Create a DataSize from a number of bits
+ * ex: bits!(4)
+ */
 #[macro_export]
 macro_rules! bits {
     ($num_bits:expr) => {
@@ -146,6 +155,10 @@ macro_rules! bits {
     };
 }
 
+/**
+ * Create a DataSize from a number of bytes
+ * ex: bytes!(4)
+ */
 #[macro_export]
 macro_rules! bytes {
     ($num_bytes:expr) => {
@@ -153,6 +166,10 @@ macro_rules! bytes {
     }
 }
 
+/**
+ * Create a DataSize from a number of kilobytes
+ * ex: kilobytes!(4)
+ */
 #[macro_export]
 macro_rules! kilobytes {
     ($num_kilobytes:expr) => {
@@ -160,6 +177,10 @@ macro_rules! kilobytes {
     }
 }
 
+/**
+ * Create a DataSize from a number of megabytes
+ * ex: megabytes!(4)
+ */
 #[macro_export]
 macro_rules! megabytes {
     ($num_megabytes:expr) => {
