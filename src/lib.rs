@@ -1,5 +1,5 @@
 use std::fmt::{Display, Debug, Formatter, Result};
-use std::ops::Add;
+use std::ops::{Add, Sub};
 
 /**
  * An amount of data, modeled as a number of a bits.
@@ -77,6 +77,17 @@ impl Add for DataSize {
         match self.num_bits.checked_add(other.num_bits) {
             Some(new_total) => DataSize { num_bits: new_total },
             _ => panic!("Addition results in an overflow: {} + {} bits can't fit in a u32", self.num_bits, other.num_bits)
+        }
+    }
+}
+
+impl Sub for DataSize {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        match self.num_bits.checked_sub(other.num_bits) {
+            Some(num_bits) => DataSize { num_bits },
+            _ => panic!("Subtraction results in a negative number: {} - {}", self.num_bits, other.num_bits),
         }
     }
 }
@@ -202,6 +213,20 @@ mod tests {
     fn test_addition_overflow() {
         #[allow(unused_must_use)] {
             bits!(u32::max_value()) + bits!(1);
+        }
+    }
+
+    #[test]
+    fn test_subtraction() {
+        assert_eq!(bits!(4) - bits!(2), bits!(2));
+        assert_eq!(bits!(4) - bits!(4), bytes!(0));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_subtraction_overflow() {
+        #[allow(unused_must_use)] {
+            bits!(1) - bits!(3);
         }
     }
 }
