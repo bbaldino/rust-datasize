@@ -130,9 +130,6 @@ macro_rules! datasize {
 
 #[macro_export]
 macro_rules! bits {
-    ($num_bits:literal) => {
-        DataSize::new_from_bits($num_bits as u32)
-    };
     ($num_bits:expr) => {
         DataSize::new_from_bits($num_bits as u32)
     };
@@ -140,21 +137,21 @@ macro_rules! bits {
 
 #[macro_export]
 macro_rules! bytes {
-    ($num_bytes:literal) => {
+    ($num_bytes:expr) => {
         DataSize::new_from_bytes($num_bytes as u32)
     }
 }
 
 #[macro_export]
 macro_rules! kilobytes {
-    ($num_kilobytes:literal) => {
+    ($num_kilobytes:expr) => {
         DataSize::new_from_kilobytes($num_kilobytes as u32)
     }
 }
 
 #[macro_export]
 macro_rules! megabytes {
-    ($num_megabytes:literal) => {
+    ($num_megabytes:expr) => {
         DataSize::new_from_megabytes($num_megabytes as u32)
     }
 }
@@ -203,6 +200,8 @@ mod tests {
     #[test]
     #[should_panic]
     fn test_addition_overflow() {
-        bits!(u32::max_value()) + bits!(1);
+        #[allow(unused_must_use)] {
+            bits!(u32::max_value()) + bits!(1);
+        }
     }
 }
