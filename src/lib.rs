@@ -68,6 +68,17 @@ impl DataSize {
      */
     pub fn megabytes(&self) -> u32 { self.kilobytes() / 1000 }
 
+    /// Return the max value this [DataSize] could hold
+    pub fn max_value(&self) -> u32 {
+        let mut max_value = 0u32;
+        for _ in 0..self.bits() - 1 {
+            max_value = max_value | 1;
+            max_value = max_value << 1;
+        }
+        // Do the last 'or' here so we don't shift again
+        max_value | 1
+    }
+
     const BYTE_IN_BITS: u32 = 8;
     const KILOBYTE_IN_BITS: u32 = 1000 * DataSize::BYTE_IN_BITS;
     const MEGABYTE_IN_BITS: u32 = 1000 * DataSize::KILOBYTE_IN_BITS;
@@ -249,5 +260,11 @@ mod tests {
         #[allow(unused_must_use)] {
             bits!(1) - bits!(3);
         }
+    }
+
+    #[test]
+    fn test_max_value() {
+        assert_eq!(bits!(2).max_value(), 3);
+        assert_eq!(bytes!(2).max_value(), 65535);
     }
 }
