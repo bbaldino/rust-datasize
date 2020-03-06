@@ -7,7 +7,7 @@ use std::ops::{Add, Sub};
  *
  * Can represent a maximum of u32::max_limit() bits.
  */
-#[derive(PartialEq, PartialOrd, Debug)]
+#[derive(PartialEq, PartialOrd, Debug, Clone)]
 pub struct DataSize {
     // Using u32 here is an arbitrary limit
     num_bits: u32
