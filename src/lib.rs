@@ -105,6 +105,20 @@ impl Sub for DataSize {
     }
 }
 
+pub trait Fits {
+    fn fits_in(&self, size: &DataSize) -> bool;
+}
+
+/// Whether or not the value of a u32 can fit into a given [DataSize]
+impl Fits for u32 {
+    fn fits_in(&self, size: &DataSize) -> bool {
+        match self {
+            f if size.max_value() >= *self => true,
+            _ => false
+        }
+    }
+}
+
 impl Display for DataSize {
     fn fmt(&self, f: &mut Formatter) -> Result {
         // Not sure if there's a good 'match' statement that could be
@@ -266,5 +280,11 @@ mod tests {
     fn test_max_value() {
         assert_eq!(bits!(2).max_value(), 3);
         assert_eq!(bytes!(2).max_value(), 65535);
+    }
+
+    #[test]
+    fn test_fits() {
+        assert_eq!(3u32.fits_in(&datasize!(3 bits)), true);
+        assert_eq!(3u32.fits_in(&datasize!(1 bits)), false);
     }
 }
