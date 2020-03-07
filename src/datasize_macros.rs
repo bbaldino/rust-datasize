@@ -1,4 +1,4 @@
-use crate::datasize::*;
+use crate::datasize::DataSize;
 
 /// A generic macro for creating any DataSize type
 /// ex: datasize!(4 kilobytes)

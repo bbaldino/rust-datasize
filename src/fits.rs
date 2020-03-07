@@ -8,7 +8,7 @@ pub trait Fits {
 impl Fits for u32 {
     fn fits_in(&self, size: &DataSize) -> bool {
         match self {
-            f if size.max_value() >= *self => true,
+            _f if size.max_value() >= *self => true,
             _ => false
         }
     }
