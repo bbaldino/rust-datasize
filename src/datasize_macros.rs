@@ -1,21 +1,3 @@
-/// A generic macro for creating any DataSize type
-/// ex: datasize!(4 kilobytes)
-#[macro_export]
-macro_rules! datasize {
-    ($num_bits:literal bits) => {
-        $crate::datasize::DataSize::new_from_bits($num_bits as u32)
-    };
-    ($num_bytes:literal bytes) => {
-        $crate::datasize::DataSize::new_from_bytes($num_bytes as u32)
-    };
-    ($num_kilobytes:literal kilobytes) => {
-        $crate::datasize::DataSize::new_from_kilobytes($num_kilobytes as u32)
-    };
-    ($num_megabytes:literal megabytes) => {
-        $crate::datasize::DataSize::new_from_megabytes($num_megabytes as u32)
-    };
-}
-
 /// Create a DataSize from a number of bits
 /// ex: bits!(4)
 #[macro_export]
@@ -52,6 +34,22 @@ macro_rules! megabytes {
     }
 }
 
+/// A generic macro for creating any DataSize type
+/// ex: datasize!(4 kilobytes)
+#[macro_export]
+macro_rules! datasize {
+    ($amount:literal $size_type:ident) => {
+        match stringify!($size_type) {
+            "bits" => bits!($amount),
+            "bytes" => bytes!($amount),
+            "kilobytes" => kilobytes!($amount),
+            "megabytes" => megabytes!($amount),
+            val @ _ => panic!("Unsupported size {}", val)
+        }
+    };
+}
+
+
 #[cfg(test)]
 mod tests {
     #[test]
@@ -64,5 +62,11 @@ mod tests {
         assert_eq!(datasize!(2 bytes), bytes!(2));
         assert_eq!(datasize!(2 kilobytes), kilobytes!(2));
         assert_eq!(datasize!(2 megabytes), megabytes!(2));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_bad_size_type() {
+        let _ = datasize!(2 petabytes);
     }
 }
