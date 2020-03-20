@@ -17,7 +17,6 @@ impl Fits for u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::datasize_macros::*;
 
     #[test]
     fn test_fits() {
