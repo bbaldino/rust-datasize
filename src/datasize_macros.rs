@@ -40,15 +40,14 @@ macro_rules! megabytes {
 macro_rules! datasize {
     ($amount:literal $size_type:ident) => {
         match stringify!($size_type) {
-            "bits" => bits!($amount),
-            "bytes" => bytes!($amount),
-            "kilobytes" => kilobytes!($amount),
-            "megabytes" => megabytes!($amount),
+            "bits" => $crate::bits!($amount),
+            "bytes" => $crate::bytes!($amount),
+            "kilobytes" => $crate::kilobytes!($amount),
+            "megabytes" => $crate::megabytes!($amount),
             val @ _ => panic!("Unsupported size {}", val)
         }
     };
 }
-
 
 #[cfg(test)]
 mod tests {
