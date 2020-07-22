@@ -50,12 +50,12 @@ impl DataSize {
     /// Return the (truncated) number of megabytes represented by this DataSize
     pub fn megabytes(&self) -> u32 { self.kilobytes() / 1000 }
 
-    /// Return the max value this [DataSize] could hold
+    /// Return the max value this [DataSize] can hold
     pub fn max_value(&self) -> u32 {
         let mut max_value = 0u32;
         for _ in 0..self.bits() - 1 {
-            max_value = max_value | 1;
-            max_value = max_value << 1;
+            max_value |= 1;
+            max_value <<= 1;
         }
         // Do the last 'or' here so we don't shift again
         max_value | 1
